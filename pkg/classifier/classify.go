@@ -8,7 +8,8 @@ import (
 
 // Classify will take a string and attempt to classify it into which products
 // are discussed
-func Classify(description string) []string {
+func Classify(rawDesc string) []string {
+	desc := stripString(rawDesc)
 
 	var keywords = make(map[string][]string)
 	keywords["Consul"] = []string{"consul"}
@@ -20,13 +21,11 @@ func Classify(description string) []string {
 	keywords["Vagrant"] = []string{"vagrant"}
 	keywords["Vault"] = []string{"vault"}
 
-	cleanDesc := stripString(description)
-
 	var counts = make(map[string]int)
 	for k, v := range keywords {
 		counts[k] = 0
 		for _, s := range v {
-			c := countOccurrences(cleanDesc, s)
+			c := countOccurrences(desc, s)
 			counts[k] = counts[k] + c
 		}
 	}
@@ -38,7 +37,6 @@ func Classify(description string) []string {
 		}
 	}
 	return found
-
 }
 
 func countOccurrences(desc, searchStr string) int {
