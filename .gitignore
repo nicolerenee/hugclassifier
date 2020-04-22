@@ -17,4 +17,7 @@
 # Binary when built
 hugclassifier
 
+# default output when ran
+results.csv
+
 .DS_Store

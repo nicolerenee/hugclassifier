@@ -3,6 +3,8 @@ package meetup
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
@@ -33,17 +35,12 @@ type EventHost struct {
 	Name string `json:"name"`
 }
 
-func beginningOfMonth(day time.Time) time.Time {
-	return time.Date(day.Year(), day.Month(), 1, 0, 0, 0, 0, day.Location())
-}
-
 // EventsForGroup will return the events for a group given the group name, which
 // is the url portion of the meetup group.
-func (c *Client) EventsForGroup(groupName string) ([]*Event, error) {
-	// lastMonth := time.Now().UTC().AddDate(0, -1, 0)
-	// lastMonth = beginningOfMonth(lastMonth)
+func (c *Client) EventsForGroup(groupName string, dateFrom, dateTo string) ([]*Event, error) {
+	uri := fmt.Sprintf("%s/%s/events?no_earlier_than=%s&no_later_than=%s&fields=event_hosts&status=upcoming,past",
+		baseURL, groupName, dateFrom, dateTo)
 
-	uri := fmt.Sprintf("%s/%s/events?scroll=recent_past&fields=event_hosts", baseURL, groupName)
 	req, err := http.NewRequest("GET", uri, nil)
 	if err != nil {
 		return nil, err
@@ -58,7 +55,17 @@ func (c *Client) EventsForGroup(groupName string) ([]*Event, error) {
 
 	defer resp.Body.Close()
 	err = json.NewDecoder(resp.Body).Decode(&events)
-	if err != nil {
+	switch {
+	case err == io.EOF:
+		// empty body no events found
+		return events, nil
+	case err != nil:
+		fmt.Println("ERROR")
+		fmt.Println(uri)
+		fmt.Println(resp.StatusCode)
+		body, _ := ioutil.ReadAll(resp.Body)
+		fmt.Println(string(body))
+
 		return nil, err
 	}
 

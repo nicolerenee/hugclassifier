@@ -14,7 +14,7 @@ const (
 	authURL     string = "https://secure.meetup.com/oauth2/authorize"
 	tokenURL    string = "https://secure.meetup.com/oauth2/access"
 	oauthState  string = "vftxcvo546yhg35bvg42h2489evijodsm"
-	redirectURL string = "http://127.0.0.1:14565/oauth/callback"
+	redirectURL string = "http://localdev.hashicorp.community:14565/oauth/callback"
 )
 
 // NewClient will configure a client with the ID and Secret you pass in
@@ -24,7 +24,6 @@ func NewClient(clientID, clientSecret string) (*Client, error) {
 		RedirectURL:  redirectURL,
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
-		Scopes:       []string{"basic"},
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  authURL,
 			TokenURL: tokenURL,
@@ -76,7 +75,7 @@ func (c *Client) Authenticate() error {
 		}
 	}()
 
-	fmt.Printf("To authenticate visit: %s\n", c.oauthConfig.AuthCodeURL(oauthState))
+	fmt.Printf("\n\n  To authenticate visit: %s\n\n\n", c.oauthConfig.AuthCodeURL(oauthState))
 
 	token := <-tc
 

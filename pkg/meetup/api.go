@@ -8,6 +8,8 @@ import (
 
 const (
 	baseURL string = "https://api.meetup.com"
+	// DateFormat provides a formatting string for dates passed into the Meetup API
+	DateFormat string = "2006-01-02T15:04:05.999"
 )
 
 // Client provides a meetup API client. A valid token is required to be able to
