@@ -76,7 +76,7 @@ func generateCSV() {
 	}
 	apiCreds, err := op.GetLogin(viper.GetString("onepassword.login"), viper.GetString("onepassword.vault"))
 	if err != nil {
-		log.Printf("\nerror: 1Password failed, ensure you are logged in by running: eval $(op signin %s)\n\n", viper.GetString("onepassword.account"))
+		log.Printf("error: 1Password failed, ensure you are logged in by running: eval $(op signin %s)\n", viper.GetString("onepassword.account"))
 		log.Fatal("error: ", err)
 	}
 
