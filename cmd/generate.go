@@ -89,19 +89,19 @@ func generateCSV() {
 		log.Fatal("error: failed to auth to meetup: ", err)
 	}
 
-	log.Printf("info: successfully authenticated, retreiving data\n")
+	log.Printf("info: successfully authenticated, retrieving data\n")
 	log.Printf("info: collecting events between %s and %s\n", dateFrom, dateTo)
 
 	var events []*meetup.Event
 	groups, err := m.HUGs()
 	if err != nil {
-		log.Fatal("error: failed to retreive HUG groups from meetup: ", err)
+		log.Fatal("error: failed to retrieve HUG groups from meetup: ", err)
 	}
 
 	for _, group := range groups {
 		e, err := m.EventsForGroup(group.MeetupURLName, dateFrom, dateTo)
 		if err != nil {
-			log.Fatal("error: failed to retreive events for a group from meetup: ", err)
+			log.Fatal("error: failed to retrieve events for a group from meetup: ", err)
 		}
 		events = append(events, e...)
 		// Keep from pounding the API to hard
